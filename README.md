@@ -4,7 +4,7 @@ IMPORTANT:
 -CADD scores for homozygous alleles are not counted twice, just once.  
 -Multiple entries for one position are discarded, only one is taken into account  
 
-#### Usage: python script.py --vep file.vep --tfile tfile --output cadd_sum_output
+#### Usage: python script.py --vep file.vep --tfile tfile --output cadd_sum_output  
 
 python sum_v4.py -h  
 usage: sum_v4.py [-h] --vep VEP --tfile TFILE [--CADD CADD] [--threshold THRESHOLD] [--gene GENE] [--start_bp START_BP] [--end_bp END_BP] [--denovo DENOVO] --output OUTPUT  
