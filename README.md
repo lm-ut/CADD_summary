@@ -2,7 +2,7 @@
 
 IMPORTANT:  
 -CADD scores for homozygous alleles are not counted twice, just once.  
--Multiple entries for one positions are discarded, only one is taken into account  
+-Multiple entries for one position are discarded, only one is taken into account  
 
 #### Usage: python script.py --vep file.vep --tfile tfile --output cadd_sum_output
 
