@@ -364,10 +364,7 @@ def main():
     Final_Summary.to_csv(str(OUTPUT)+'_SummaryFam.csv', sep='\t', index = False)
     log_file(OUTPUT) 
     print("DONE!")
-
-
-# In[ ]:
-
+    
 
 if __name__ == "__main__":
     main()
