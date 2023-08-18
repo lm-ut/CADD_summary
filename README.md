@@ -13,12 +13,12 @@ CADD file summary
 
 [optional] arguments:  
   -h, --help            show this help message and exit  
-  <strong>--vep</strong> VEP             vep file with CADD scores  
-  --tfile TFILE         Prefix of tped and tfam, both files will be read  
-  [--CADD] CADD_PHRED/CADD_RAW           Either CADD_PHRED or CADD_RAW score will be estimated, default CADD_PHRED  
-  [--threshold] THRESHOLD CADD threshold, Int  
-  [--gene] GENE_LIST           File with gene list to estimate CADD from  
-  [--start_bp] START_BP   Int with start position in bp  
-  [--end_bp] END_BP       Int with end position in bp  
-  [--denovo] DENOVO       Estimate de novo mutations, WORK IN PROGRESS DO NOT USE  
+  <strong>--vep</strong> VEP:   vep file with CADD scores  
+  <strong>--tfile</strong> TFILE:         Prefix of tped and tfam, both files will be read  
+  [<strong>--CADD</strong>] CADD_PHRED/CADD_RAW:           Either CADD_PHRED or CADD_RAW score will be estimated, default CADD_PHRED  
+  [<strong>--threshold</strong>] THRESHOLD: CADD threshold, Int  
+  [<strong>--gene</strong>] GENE_LIST:           File with gene list to estimate CADD from  
+  [<strong>--start_bp</strong>] START_BP:   Int with start position in bp  
+  [<strong>--end_bp</strong>] END_BP:       Int with end position in bp  
+  [<strong>--denovo</strong>] DENOVO:       Estimate de novo mutations, WORK IN PROGRESS DO NOT USE  
   --output OUTPUT       output name file  
