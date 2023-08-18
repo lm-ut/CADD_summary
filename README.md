@@ -11,14 +11,14 @@ usage: script.py [-h] --vep VEP --tfile TFILE [--CADD CADD] [--threshold THRESHO
 
 CADD file summary
 
-optional arguments:  
+[optional] arguments:  
   -h, --help            show this help message and exit  
   --vep VEP             vep file with CADD scores  
   --tfile TFILE         Prefix of tped and tfam, both files will be read  
-  --CADD CADD           Either CADD_PHRED or CADD_RAW score will be estimated, default CADD_PHRED  
-  --threshold THRESHOLD CADD threshold  
-  --gene GENE           File with gene list to estimate CADD from  
-  --start_bp START_BP   Int with start position in bp  
-  --end_bp END_BP       Int with end position in bp  
-  --denovo DENOVO       Estimate de novo mutations, WORK IN PROGRESS DO NOT USE  
+  [--CADD] CADD_PHRED/CADD_RAW           Either CADD_PHRED or CADD_RAW score will be estimated, default CADD_PHRED  
+  [--threshold] THRESHOLD CADD threshold, Int  
+  [--gene] GENE_LIST           File with gene list to estimate CADD from  
+  [--start_bp] START_BP   Int with start position in bp  
+  [--end_bp] END_BP       Int with end position in bp  
+  [--denovo] DENOVO       Estimate de novo mutations, WORK IN PROGRESS DO NOT USE  
   --output OUTPUT       output name file  
