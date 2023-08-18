@@ -6,8 +6,8 @@ IMPORTANT:
 
 #### Usage: python script.py --vep file.vep --tfile tfile --output cadd_sum_output  
 
-python sum_v4.py -h  
-usage: sum_v4.py [-h] --vep VEP --tfile TFILE [--CADD CADD] [--threshold THRESHOLD] [--gene GENE] [--start_bp START_BP] [--end_bp END_BP] [--denovo DENOVO] --output OUTPUT  
+python script.py -h  
+usage: script.py [-h] --vep VEP --tfile TFILE [--CADD CADD] [--threshold THRESHOLD] [--gene GENE] [--start_bp START_BP] [--end_bp END_BP] [--denovo DENOVO] --output OUTPUT  
 
 CADD file summary
 
