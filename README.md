@@ -13,7 +13,7 @@ CADD file summary
 
 [optional] arguments:  
   -h, --help            show this help message and exit  
-  --vep VEP             vep file with CADD scores  
+  <strong>--vep</strong> VEP             vep file with CADD scores  
   --tfile TFILE         Prefix of tped and tfam, both files will be read  
   [--CADD] CADD_PHRED/CADD_RAW           Either CADD_PHRED or CADD_RAW score will be estimated, default CADD_PHRED  
   [--threshold] THRESHOLD CADD threshold, Int  
