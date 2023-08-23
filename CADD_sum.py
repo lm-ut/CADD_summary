@@ -27,6 +27,7 @@ parser.add_argument('--output', help='output name file', required=True,default='
 args = vars(parser.parse_args())
 
 
+
 # Default
 CADD_FILE = args['vep']
 TPED = args['tfile']+'.tped'
@@ -44,6 +45,7 @@ END_BP = args['end_bp']
 DENOVO = args['denovo']
 
 
+
 def log_file(OUTPUT):
     with open(OUTPUT+'.log','w') as logfile:
         logfile.write('CADD file used: '+str(CADD_FILE)+'\n')
@@ -59,7 +61,6 @@ def log_file(OUTPUT):
         else:
             logfile.write('Gene file used: none'+'\n')       
 
-
 ## Assumes that VEP file has info for only one chromosome
 def get_chr(cadd_file):
     Chromosome = cadd_file['CHR'].drop_duplicates().item()
@@ -70,7 +71,6 @@ def return_IDs(tfam):
     tfam = pd.read_csv(TFAM,sep=' ', names=['POP','ID','A','B','C','D'])
     IDs = tfam['ID']
     return IDs
-
 
 
 ### Retrieve only the non # rows from the CADD output
@@ -94,7 +94,6 @@ def clean_cadd_input(cadd_file):
             sys.exit()  
 
 
-
 ### extract columns of interest ##
 
 def extract_columns_cadd(clean_cadd_file):
@@ -108,15 +107,17 @@ def extract_columns_cadd(clean_cadd_file):
     input_for_summary[['CHR', 'POS']] = input_for_summary["CHR:POS"].apply(lambda x: pd.Series(str(x).split(":")))
     
     ## Cleaning POS
-    input_for_summary[['POS', 'POS2']] = input_for_summary["POS"].apply(lambda x: pd.Series(str(x).split("-")))
-    general_CADD = input_for_summary.drop(columns=['POS2'])
- 
+    #input_for_summary[['POS', 'POS2']] = input_for_summary["POS"].apply(lambda x: pd.Series(str(x).split("-")))
+    #general_CADD = input_for_summary.drop(columns=['POS2'])
+
+    general_CADD = input_for_summary
     if len(general_CADD) > 0:
         return general_CADD
     else:
         print("Something is wrong at fun extract_columns_cadd(). Your file has length: "+ str(len(cadd_file)))
         print("Stopping program")
         sys.exit()
+
 
 
 ## Subset based on GENE_LIST parameter ##
@@ -139,6 +140,7 @@ def extract_gene_list(GENE_LIST,general_CADD):
         return CADD_filtered_genes
 
 
+
 ## Select entries within the bp range ##
 
 def bp_range(cadd_file, start_bp, end_bp):
@@ -157,6 +159,7 @@ def bp_range(cadd_file, start_bp, end_bp):
         print("No bp range given, selecting all available SNPs")
         return cadd_file
 
+
 def sort_and_clean_cadd(cadd_file, cadd_type, threshold):  
 
 ## Sorted file, to remove duplicate entries, 
@@ -174,6 +177,7 @@ def sort_and_clean_cadd(cadd_file, cadd_type, threshold):
         return cadd_threshold
 
 
+
 ## Assign label 'Affected' if CADD variant is present ##
 
 def assign_affected(sharedpos_caddfile):
@@ -188,6 +192,7 @@ def assign_affected(sharedpos_caddfile):
     subset_shared_pos_ordered = sharedpos_caddfile.T.groupby(level=0).first().T
     
     return subset_shared_pos_ordered
+
 
 
 ## Hard-coded for family based analyses
@@ -228,6 +233,7 @@ def de_novo(cadd_file):
     return denovo_info
 
 
+
 ## Summary ##    
 
 def get_summary(cadd_file):
@@ -241,7 +247,6 @@ def get_summary(cadd_file):
 
 
         short_summary = pd.DataFrame(columns = ['CHR','CADD_SUM','CADD_AVG','CADD_MIN','CADD_MAX','N'])
-        #short_summary = short_summary.append({'CHR': CHROMOSOME, 'CADD_SUM': CADD_SUM, 'CADD_AVG': CADD_AVG, 'CADD_MIN': CADD_MIN, 'CADD_MAX': CADD_MAX},ignore_index=True)
         short_summary.loc[len(short_summary)] = {'CHR': CHROMOSOME, 'CADD_SUM': CADD_SUM, 'CADD_AVG': CADD_AVG, 'CADD_MIN': CADD_MIN, 'CADD_MAX': CADD_MAX, 'N': CADD_N}
         summary_final = short_summary.rename(index = {0: TARGET})
         return summary_final
@@ -258,20 +263,37 @@ def overlap_tped_pos(tped_file, cadd_file):
 
     IDs = return_IDs(TFAM)
 
-    colnames = ['CHR','rs','cM','POS',IDs[0]+'_1',IDs[0]+'_2',IDs[1]+'_1',IDs[1]+'_2',IDs[2]+'_1',IDs[2]+'_2']
+## Duplicating the samples so that the IDs are haplotype-based, IDs are now IDs_1 and IDs_2 
+
+    IDs_1 = pd.Series([ID for ID in IDs + "_1"], name="ID")
+    IDs_2 = pd.Series([ID for ID in IDs + "_2"], name="ID")
+
+    IDs_duplicated = pd.merge(IDs_1, IDs_2, right_index=True, left_index=True)
+    One_ColIDs = IDs_duplicated.apply(pd.Series).stack().reset_index(drop=True)
+    tmp = One_ColIDs.tolist()
+
+## Setting col names for tped
+    colnames = ['CHR','rs','cM','POS']
+    colnames.extend(tmp)
+
+## Reading tped and finding overlapping positions
+    
     tped = pd.read_csv(tped_file, sep=' ', names=colnames)
+    #print(tped)
     cleaned_tped = tped.drop(['CHR','rs','cM'],axis=1)
+    cleaned_tped['POS'] = cleaned_tped['POS'].astype(int)
 
     cadd_file['POS']=cadd_file['POS'].copy().astype(int)
-
     cleaned_general_CADD = cadd_file[["POS","CHR","Allele","Gene","CADD_PHRED"]]
-
+    
+    
     shared_pos = cleaned_tped.merge(cleaned_general_CADD, on=["POS"])
     if len(shared_pos) < 1:
         print("No positions found in tped")
         sys.exit()
     else:
         return shared_pos
+
 
 
 ## Summary ind-based ##
@@ -282,10 +304,7 @@ def ind_based_summary(cadd_file):
     IDs = return_IDs(TFAM)
 
     for i in range(0,len(IDs)):
-       # This if causing many issues
-        #print(cadd_file[cadd_file['RES_'+IDs[i]+'_1'] == 'Affected']) or (cadd_file[cadd_file['RES_'+IDs[i]+'_2'] == 'Affected'])
-        #if (cadd_file[cadd_file['RES_'+IDs[i]+'_1'] == 'Affected']) or (cadd_file[cadd_file['RES_'+IDs[i]+'_2'] == 'Affected']):
-            
+          
         RES_tmp = cadd_file[(cadd_file['RES_'+IDs[i]+'_1'] == 'Affected') | (cadd_file['RES_'+IDs[i]+'_2'] == 'Affected')].copy()
         
         if len(RES_tmp) > 1:
@@ -299,14 +318,12 @@ def ind_based_summary(cadd_file):
 
         else:
             print(IDs[i]," has no overlapping alleles")
-            #summary_fam = summary_fam.append({'CHR': 'NaN', 'CADD_SUM': 'NaN', 'CADD_AVG': 'NaN', 'CADD_MIN': 'NaN', 'CADD_MAX': 'NaN', 'ID': IDs[i]},ignore_index=True)
             summary_fam.loc[len(summary_fam)] = {'CHR': 'NaN', 'CADD_SUM': 'NaN', 'CADD_AVG': 'NaN', 'CADD_MIN': 'NaN', 'CADD_MAX': 'NaN','N': 'NaN', 'ID': IDs[i]}
        
     #summary_fam = pd.concat([summary_fam,RES_tmp_sum])
     #print(summary_fam)
 
     return summary_fam
-
 
 
 
@@ -364,7 +381,7 @@ def main():
     Final_Summary.to_csv(str(OUTPUT)+'_SummaryFam.csv', sep='\t', index = False)
     log_file(OUTPUT) 
     print("DONE!")
-    
+
 
 if __name__ == "__main__":
     main()
