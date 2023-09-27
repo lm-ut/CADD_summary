@@ -43,5 +43,3 @@ if len(subset_denovo)>1:
     subset_denovo.to_csv('DENOVO_'+FILE, sep = '\t')
 else:
     print('NO DENOVO FOUND IN: '+CHR)
-
-# In[ ]:
