@@ -23,7 +23,7 @@ parser.add_argument('--denovo', help='Estimate de novo mutations, WORK IN PROGRE
                     default="NO")
 parser.add_argument('--output', help='output name file', required=True, default='output')
 
-# parser.add_argument('--plot',help='Want to plot? YES or NO, default NO',required=False,default='NO')
+## parser.add_argument('--plot',help='Want to plot? YES or NO, default NO',required=False,default='NO')
 
 args = vars(parser.parse_args())
 
